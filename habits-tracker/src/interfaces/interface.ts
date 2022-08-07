@@ -10,3 +10,9 @@ export interface IHabbit {
         [key: string]: number
     }
 }
+
+export interface ICategory {
+    id: number
+    title: string
+    file: string    
+}

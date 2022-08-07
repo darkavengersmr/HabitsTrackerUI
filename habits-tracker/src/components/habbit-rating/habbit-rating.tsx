@@ -1,9 +1,10 @@
 import { StarIcon } from "@chakra-ui/icons";
-import { Container, useColorMode } from "@chakra-ui/react";
+import { Grid, GridItem, useColorMode } from "@chakra-ui/react";
 import React from "react";
 
 interface HabbitsRatingProps {
-    rate: number
+    rate: number,
+    onChangeRate: (rating: number) => void
 }
 
 const rateToStars = (rate: number): Boolean[] => {
@@ -19,24 +20,31 @@ const rateToStars = (rate: number): Boolean[] => {
     return habbitStars
 }
 
-const HabbitsRating: React.FC<HabbitsRatingProps> = ({ rate }) => {
+const HabbitsRating: React.FC<HabbitsRatingProps> = ({ rate, onChangeRate }) => {
 
     const { colorMode } = useColorMode()
     const stars = rateToStars(rate)
 
     return (
-        <Container justifyContent="end" display="flex"> 
+        <Grid templateColumns="repeat(5, 40px)" 
+              justifyContent="end" 
+              alignItems="end" 
+              height="80px" 
+              width="240px"
+              pb="15px"
+              pr="8px"> 
                 {stars.map((star, key) => {
                 return (
-                
-                <StarIcon color={star ? "yellow" : colorMode === 'dark' ? "white" : "black" }
-                          w={8}
-                          h={8}                          
-                          key={key}                          
-                />
+                    <GridItem key={key}>                            
+                        <StarIcon color={star ? "yellow" : colorMode === 'dark' ? "white" : "grey" }
+                                w={8}
+                                h={8}
+                                onClick={() => onChangeRate(key+1)}                                                                                    
+                        />
+                    </GridItem>
                 )})}
             
-        </Container>
+        </Grid>
     )
 }
 
