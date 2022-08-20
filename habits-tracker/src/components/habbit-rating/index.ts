@@ -1,2 +1,2 @@
-import HabbitsRating from "./habbit-rating";
-export default HabbitsRating
+import HabitsRating from "./habbit-rating";
+export default HabitsRating

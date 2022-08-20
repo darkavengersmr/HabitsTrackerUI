@@ -2,7 +2,7 @@ export interface ITracker {
     [key: string]: number    
 }
 
-export interface IHabbit {
+export interface IHabit {
     id: number
     title: string
     category: string
@@ -15,4 +15,11 @@ export interface ICategory {
     id: number
     title: string
     file: string    
+}
+
+export interface ICatalog {
+    id: number
+    title: string
+    category: string 
+    detail: string       
 }

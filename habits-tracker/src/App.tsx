@@ -1,11 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import HabbitsPage from "./pages/habbits";
-import ProfilePage from "./pages/profile";
+import HabitsPage from "./pages/habits-list-page";
+import ProfilePage from "./pages/profile-page";
+import HabitDetailPage from "./pages/habit-detail-page";
+import HabitsCatalogPage from "./pages/catalog-page";
 
 function App() {
   return (<>
     <Routes>
-        <Route path="/" element={<HabbitsPage />} />
+        <Route path="/" element={<HabitsPage />} />
+        <Route path="habit/:id" element={<HabitDetailPage />} />
+        <Route path="catalog" element={<HabitsCatalogPage />} />
         <Route path="profile" element={<ProfilePage />} />
     </Routes>
   </>    

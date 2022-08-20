@@ -2,25 +2,25 @@ import { StarIcon } from "@chakra-ui/icons";
 import { Grid, GridItem, useColorMode } from "@chakra-ui/react";
 import React from "react";
 
-interface HabbitsRatingProps {
+interface habitsRatingProps {
     rate: number,
     onChangeRate: (rating: number) => void
 }
 
 const rateToStars = (rate: number): Boolean[] => {
-    let habbitStars: Boolean[] = []
+    let habitstars: Boolean[] = []
     for (let i=0; i<5; i++) {
         if (i <= rate-1) {
-            habbitStars.push(true)
+            habitstars.push(true)
         } 
         else {
-            habbitStars.push(false)
+            habitstars.push(false)
         }
     }
-    return habbitStars
+    return habitstars
 }
 
-const HabbitsRating: React.FC<HabbitsRatingProps> = ({ rate, onChangeRate }) => {
+const HabitsRating: React.FC<habitsRatingProps> = ({ rate, onChangeRate }) => {
 
     const { colorMode } = useColorMode()
     const stars = rateToStars(rate)
@@ -48,4 +48,4 @@ const HabbitsRating: React.FC<HabbitsRatingProps> = ({ rate, onChangeRate }) => 
     )
 }
 
-export default HabbitsRating
+export default HabitsRating

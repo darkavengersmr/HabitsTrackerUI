@@ -1,9 +1,10 @@
-import { Container, Grid, GridItem, Text, useColorMode } from "@chakra-ui/react";
-import { observer } from "mobx-react-lite";
-import React from "react";
-import habbits from "../../store/habbits";
-import HabbitsRating from "../habbit-rating";
-import dateNow from "../../helpers/helpers";
+import { Container, Grid, GridItem, Text, useColorMode } from "@chakra-ui/react"
+import { observer } from "mobx-react-lite"
+import React from "react"
+import habits from "../../store/habits"
+import HabitsRating from "../habbit-rating"
+import {dateNow} from "../../helpers/helpers"
+import { useNavigate } from "react-router-dom"
 
 function bgImage(category: string, theme: string): string {
     const color = theme === "dark" ? 0 : 255
@@ -11,12 +12,13 @@ function bgImage(category: string, theme: string): string {
            rgba(2${color}, ${color}, ${color}, 0.4)), url('../../images/${category}.png')`
 }
 
-const HabbitsList: React.FC = observer(() => {
+const habitsList: React.FC = observer(() => {
 
-    const { colorMode } = useColorMode()
+    const navigate = useNavigate()
+    const { colorMode } = useColorMode()    
     const dateYYYYMMDD = dateNow(0)
 
-    if (habbits.data.length === 0) {
+    if (habits.data.length === 0) {
         return (
             <Container mt={5} mb={8}>
                 <Text fontSize={20} mt={16} >
@@ -32,7 +34,6 @@ const HabbitsList: React.FC = observer(() => {
         )
     }
 
-
     return (
 
         <Container mt={5} mb={8}
@@ -46,14 +47,14 @@ const HabbitsList: React.FC = observer(() => {
                                      xl: "repeat(4, 1fr)"}}
                   gap={2}                                    
             >
-                {habbits.data.map((habbit) => {
+                {habits.data.map((habit) => {
                 return (
                 <GridItem w='320px' 
                           h='160px'
                           borderWidth={2}                          
-                          key={habbit.id} 
+                          key={habit.id} 
                           borderRadius="16px"
-                          bgImage={bgImage(habbit.category, colorMode)}
+                          bgImage={bgImage(habit.category, colorMode)}
                           _before={{                            
                             opacity: 0.9
                           }}
@@ -64,9 +65,10 @@ const HabbitsList: React.FC = observer(() => {
                         <GridItem w='320px'
                                   h='80px'
                                   gridColumn="span 4"
+                                  onClick={() => navigate(`habit/${habit.id}`)}
                         >
                             <Text fontSize={24} mt={4} ml={4} noOfLines={2}>
-                                {habbit.title} 
+                                {habit.title} 
                             </Text>        
                         </GridItem>
                         <GridItem w='80px'
@@ -75,7 +77,7 @@ const HabbitsList: React.FC = observer(() => {
                                   alignItems="end"
                         >
                             <Text fontSize={24} mb={3} ml={4} fontWeight="700"> 
-                                {habbits.daysWithoutPass(habbit.id)}
+                                {habits.daysWithoutPass(habit.id)}
                             </Text>
                         
                         </GridItem>
@@ -83,8 +85,8 @@ const HabbitsList: React.FC = observer(() => {
                                   h='80px'                                  
                                   gridColumn="span 3"
                         >
-                            <HabbitsRating rate={habbit.tracker[dateYYYYMMDD]} 
-                                           onChangeRate={(rating) => {habbits.setRating(habbit.id, rating)}}/>        
+                            <HabitsRating rate={habit.tracker[dateYYYYMMDD]} 
+                                          onChangeRate={(rating) => {habits.setRating(habit.id, rating)}}/>        
                         </GridItem>
                     </Grid>
                     
@@ -95,4 +97,4 @@ const HabbitsList: React.FC = observer(() => {
     )
 })
 
-export default HabbitsList
+export default habitsList
