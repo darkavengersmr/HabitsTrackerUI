@@ -76,8 +76,8 @@ const habitsList: React.FC = observer(() => {
                                   display="flex"
                                   alignItems="end"
                         >
-                            <Text fontSize={24} mb={3} ml={4} fontWeight="700"> 
-                                {habits.daysWithoutPass(habit.id)}
+                            <Text fontSize={20} mb={3} ml={4} fontWeight="700"> 
+                                {habits.lastDaysWithoutPass(habit.id)}/30
                             </Text>
                         
                         </GridItem>

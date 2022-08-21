@@ -1,4 +1,4 @@
-import { HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
+import { CalendarIcon, HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Container, Flex, Heading } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,12 +15,13 @@ const AppHeader = ({AppHeaderComponents}: IAppHeaderComponents) => {
         <Box as='header'>
             <Container maxW='100%' mt={6}>
                 <Flex justifyContent='space-between' alignItems='center'>
-                    <Heading as='h4' size='md' onClick={() => navigate('/')}>Мои.Привычки</Heading>
+                    <Heading as='h5' size='sm' onClick={() => navigate('/')}>Лучшая версия себя</Heading>
                     <Flex justifyContent='center' alignItems='center'>
                         <>
                             {AppHeaderComponents.map((Component, key) => (<Component key={key} />))}
-                            <HamburgerIcon w={8} h={8} ml={2} onClick={() => navigate('/catalog')} />
-                            <SettingsIcon w={8} h={8} ml={2} onClick={() => navigate('/profile')} />
+                            <CalendarIcon w={6} h={6} ml={2} onClick={() => navigate('/reports')} />
+                            <HamburgerIcon w={6} h={6} ml={2} onClick={() => navigate('/catalog')} />
+                            <SettingsIcon w={6} h={6} ml={2} onClick={() => navigate('/profile')} />
                         </> 
                     </Flex>                    
                 </Flex>

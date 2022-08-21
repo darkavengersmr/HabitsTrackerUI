@@ -23,3 +23,12 @@ export interface ICatalog {
     category: string 
     detail: string       
 }
+
+export interface IChartData {    
+    label: string
+    data: {
+        primary: string
+        secondary: number
+    }[]
+    [key: string]: any
+}

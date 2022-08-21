@@ -17,7 +17,12 @@ class Catalog {
 
     constructor() {
         makeAutoObservable(this)
-    }    
+    }
+    
+    getFilteredByCategory(category: string) : ICatalog[] {
+        if (category === 'all') return this.data
+        return this.data.filter((el) => el.category === category)
+    }
 }
 
 export default new Catalog()

@@ -14,6 +14,8 @@ const HabitDetailPage = observer(() => {
 
   const habit = habits.habitById(parseInt(id))
 
+  const chartData = habits.chartData(parseInt(id))
+
   if (!habit.title) {
     return (
       <>
@@ -29,7 +31,7 @@ const HabitDetailPage = observer(() => {
     return (
       <>
           <AppHeader AppHeaderComponents={[EditHabit, RemoveHabit]}/>
-          <HabitDetail habit={habit}/>
+          <HabitDetail habit={habit} data={chartData} />
       </>    
     )
   }

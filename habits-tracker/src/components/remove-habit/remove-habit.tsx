@@ -30,8 +30,8 @@ const RemoveHabit: React.FC = () => {
 
     return (
             <>
-            <DeleteIcon w={8} 
-                        h={8}
+            <DeleteIcon w={6} 
+                        h={6}
                         ml={2}                     
                         onClick={onOpen}
             />

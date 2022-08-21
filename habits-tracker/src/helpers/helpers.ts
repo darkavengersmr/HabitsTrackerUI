@@ -12,29 +12,22 @@ export function dateNow(dayBias: number): string {
     return [year, month, day].join('-');
 }
 
-export function resultToPercentage(result: number): string {
+export function resultToPercentage(result: number): number {
     switch(result) {
         case 0:
-            return "0%"
-            break      
+            return 0;            
         case 1:
-            return "30%"
-            break
+            return 30            
         case 2:
-            return "50%"
-            break
+            return 50
         case 3:
-            return "80%"
-            break
+            return 80
         case 4:
-            return "100%"
-            break
+            return 100
         case 5:
-            return "150%"
-            break
+            return 150
         default:
-            return "неизвестно"
-            break
+            return 0
       }    
 }
  

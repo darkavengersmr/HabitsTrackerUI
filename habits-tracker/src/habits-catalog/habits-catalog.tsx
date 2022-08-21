@@ -1,9 +1,11 @@
-import { Container, Grid, GridItem, Text, useColorMode } from "@chakra-ui/react"
+import { Container, Grid, GridItem, Select, Text, useColorMode } from "@chakra-ui/react"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import catalog from "../store/catalog"
 import AddHabit from "../components/add-habit"
 import { ICatalog } from "../interfaces/interface"
+import categories from "../store/categories"
+import { useInput } from "../hooks"
 
 function bgImage(category: string, theme: string): string {
     const color = theme === "dark" ? 0 : 255
@@ -41,23 +43,43 @@ const catalogItem = (habit: ICatalog, colorMode: string): React.ReactNode => {
 )}
 
 const HabitsCatalog: React.FC = observer(() => {
-    
+    const categoryFilter = useInput('all', "notNullText")
     const { colorMode } = useColorMode()        
 
     return (
-
-        <Container mt={5} mb={8}
+        <>
+        <Container mt={4} mb={0}
                    justifyContent="center" 
-                   display="flex"                   
-                   >            
-        
+                   display="flex"                                      
+                   >
+            <Select value={categoryFilter.value}                            
+                    isInvalid={categoryFilter.isInvalid}
+                    errorBorderColor={categoryFilter.errorBorderColor}                            
+                    onBlur={categoryFilter.onBlur}
+                    onChange={(e) => categoryFilter.onChange(e)}
+            >
+                {
+                    Object.keys(categories.getCategories()).map((c) => (
+                        <option value={c} 
+                                key={c}
+                        >
+                            {categories.getCategories()[c]}
+                        </option>
+                    ))
+                }
+            </Select>
+        </Container>
+        <Container mt={4} mb={8}
+                justifyContent="center" 
+                display="flex"                                      
+                >
             <Grid templateColumns={{ base: "repeat(1, 1fr)", 
                                      md: "repeat(2, 1fr)", 
                                      lg: "repeat(3, 1fr)",
                                      xl: "repeat(4, 1fr)"}}
-                  gap={2}                                    
+                  gap={2}                  
             >
-                {catalog.data.map((habit) => <AddHabit key={habit.id} 
+                {catalog.getFilteredByCategory(categoryFilter.value).map((habit) => <AddHabit key={habit.id} 
                                                        title={habit.title}
                                                        category={habit.category}
                                              >
@@ -66,6 +88,7 @@ const HabitsCatalog: React.FC = observer(() => {
                                                         
             </Grid>
         </Container>
+        </>
     )
 })
 

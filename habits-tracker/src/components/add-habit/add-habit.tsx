@@ -20,8 +20,8 @@ type Props = {
     category?: string
 };
 
-const addIconChild = <PlusSquareIcon w={8} 
-                                     h={8}
+const addIconChild = <PlusSquareIcon w={6} 
+                                     h={6}
                                      ml={2}                                                 
                      />
 

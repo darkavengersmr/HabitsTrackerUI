@@ -42,8 +42,8 @@ const EditHabit: React.FC = () => {
 
     return (
             <>
-            <EditIcon w={8} 
-                      h={8}
+            <EditIcon w={6} 
+                      h={6}
                       ml={2}                     
                       onClick={onOpen}
             />

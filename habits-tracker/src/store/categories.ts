@@ -14,6 +14,12 @@ class Categories {
     constructor() {
         makeAutoObservable(this)
     }    
+
+    getCategories = (): {[key: string]: string} => {
+        let res: {[key: string]: string} = {'all': 'Все категории'}
+        this.data.map(el => res[el.file] = el.title)        
+        return res        
+    }
 }
 
 export default new Categories()

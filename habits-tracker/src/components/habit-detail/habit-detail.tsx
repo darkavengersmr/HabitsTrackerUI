@@ -1,14 +1,16 @@
 import { Container, Table, TableContainer, Tbody, Td, Text,  Th, Thead, Tr } from "@chakra-ui/react"
-import { IHabit } from "../../interfaces/interface"
+import { IChartData, IHabit } from "../../interfaces/interface"
 import { resultToPercentage } from "../../helpers/helpers"
 import { observer } from "mobx-react-lite"
-import habits from "../../store/habits";
+import HabitChart from "../chart"
+import habits from "../../store/habits"
 
 interface HabitDetailProps {
     habit: IHabit
+    data: IChartData[]
 }
 
-const HabitDetail = observer(({habit}: HabitDetailProps ) => {
+const HabitDetail = observer(({habit, data}: HabitDetailProps ) => {
     
     return (
         <Container mt={5} mb={8}>            
@@ -16,18 +18,38 @@ const HabitDetail = observer(({habit}: HabitDetailProps ) => {
             {habit.title}            
             </Text>
 
-            <Text fontSize={16} mt={2} align="center">
-            дней без перерыва: {habits.daysWithoutPass(habit.id)}            
-            </Text>
+            <TableContainer mt={4}>        
+                    <Table variant='simple'>            
+                        <Thead>
+                        <Tr>
+                            <Th>Показатель</Th>
+                            <Th isNumeric>Дней</Th>                
+                        </Tr>
+                        </Thead>
+                        <Tbody>                            
+                            <Tr>
+                                <Td>Без пропусков</Td>
+                                <Td isNumeric>{habits.lastDaysWithoutPass(habit.id)} </Td>                
+                            </Tr>
+                            <Tr>
+                                <Td>Всего без пропусков</Td>
+                                <Td isNumeric>{habits.maxDaysWithoutPass(habit.id)} </Td>                
+                            </Tr>                            
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+
+
+        <HabitChart data={data} />
 
         {
             Object.keys(habit.tracker).length>0 ? (
-                <TableContainer mt={12}>        
+                <TableContainer mt={4}>        
                     <Table variant='simple'>            
                         <Thead>
                         <Tr>
                             <Th>Дата</Th>
-                            <Th isNumeric>Результат</Th>                
+                            <Th isNumeric>Результат, %</Th>                
                         </Tr>
                         </Thead>
                         <Tbody>
