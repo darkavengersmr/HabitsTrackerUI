@@ -44,6 +44,7 @@ const catalogItem = (habit: ICatalog, colorMode: string): React.ReactNode => {
 
 const HabitsCatalog: React.FC = observer(() => {
     const categoryFilter = useInput('all', "notNullText")
+    const categoriesCount = catalog.getFilteredByCategory(categoryFilter.value).length
     const { colorMode } = useColorMode()        
 
     return (
@@ -74,9 +75,10 @@ const HabitsCatalog: React.FC = observer(() => {
                 display="flex"                                      
                 >
             <Grid templateColumns={{ base: "repeat(1, 1fr)", 
-                                     md: "repeat(2, 1fr)", 
-                                     lg: "repeat(3, 1fr)",
-                                     xl: "repeat(4, 1fr)"}}
+                                     md: categoriesCount > 1 ? "repeat(2, 1fr)" : "repeat(1, 1fr)", 
+                                     lg: categoriesCount > 1 ? "repeat(3, 1fr)" : "repeat(1, 1fr)",
+                                     xl: categoriesCount > 1 ? "repeat(4, 1fr)" : "repeat(1, 1fr)"
+                                    }}
                   gap={2}                  
             >
                 {catalog.getFilteredByCategory(categoryFilter.value).map((habit) => <AddHabit key={habit.id} 
