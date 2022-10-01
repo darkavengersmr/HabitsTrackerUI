@@ -1,16 +1,34 @@
-import { Container, Table, TableContainer, Tbody, Td, Text,  Th, Thead, Tr } from "@chakra-ui/react"
+import { Container, FormControl, Select, Table, TableContainer, Tbody, Td, Text,  Th, Thead, Tr } from "@chakra-ui/react"
 import habits from "../../store/habits"
 import { observer } from "mobx-react-lite"
 import HabitChart from "../chart"
+import { useState } from "react"
 
 const Reports = observer(() => {
     
+    const [habitChartTitle, setHabitChartTitle] = useState(0)
+
     return (
         <Container mt={5} mb={8}>            
-            <Text fontSize={24} mt={8} align="center">
-                Мои привычки
-            </Text>            
-        <HabitChart data={habits.chartAllData()} />
+            <FormControl mt={4}>
+                                     
+                    <Select 
+                            value={habitChartTitle}                                                        
+                            onChange={(e) => setHabitChartTitle(parseInt(e.target.value))}
+                    >
+                        {habits.data.map((habit) => {
+                            return <option key={habit.id} 
+                                           value={habit.id}
+                                    >
+                                        {habit.title}
+                                    </option>
+                        })
+
+                        }
+                    </Select>
+
+                    </FormControl>            
+        <HabitChart data={habits.chartData(habitChartTitle)} />
 
         {
             habits.data.length>0 ? (

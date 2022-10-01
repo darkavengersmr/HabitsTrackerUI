@@ -15,13 +15,18 @@ const AppHeader = ({AppHeaderComponents}: IAppHeaderComponents) => {
         <Box as='header'>
             <Container maxW='100%' mt={6}>
                 <Flex justifyContent='space-between' alignItems='center'>
-                    <Heading as='h5' size='sm' onClick={() => navigate('/')}>Лучшая версия себя</Heading>
+                    <Heading as='h5' 
+                             size='sm'
+                             _hover={{cursor: "pointer"}}                             
+                             onClick={() => navigate('/')}>
+                                Лучшая версия себя
+                    </Heading>
                     <Flex justifyContent='center' alignItems='center'>
                         <>
                             {AppHeaderComponents.map((Component, key) => (<Component key={key} />))}
-                            <CalendarIcon w={6} h={6} ml={2} onClick={() => navigate('/reports')} />
-                            <HamburgerIcon w={6} h={6} ml={2} onClick={() => navigate('/catalog')} />
-                            <SettingsIcon w={6} h={6} ml={2} onClick={() => navigate('/profile')} />
+                            <CalendarIcon w={6} h={6} ml={2} _hover={{cursor: "pointer"}} onClick={() => navigate('/reports')} />
+                            <HamburgerIcon w={6} h={6} ml={2} _hover={{cursor: "pointer"}} onClick={() => navigate('/catalog')} />
+                            <SettingsIcon w={6} h={6} ml={2} _hover={{cursor: "pointer"}} onClick={() => navigate('/profile')} />
                         </> 
                     </Flex>                    
                 </Flex>

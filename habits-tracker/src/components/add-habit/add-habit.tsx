@@ -22,7 +22,8 @@ type Props = {
 
 const addIconChild = <PlusSquareIcon w={6} 
                                      h={6}
-                                     ml={2}                                                 
+                                     ml={2}
+                                     _hover={{cursor: "pointer"}}                                                  
                      />
 
 const AddHabit: React.FC<Props> = ({children, title="", category=""}) => {   
