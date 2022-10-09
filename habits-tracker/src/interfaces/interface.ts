@@ -32,3 +32,17 @@ export interface IChartData {
     }[]
     [key: string]: any
 }
+
+export interface IUser {
+    id: string
+    username: string
+    email: string
+    token: string
+    isLogIn: boolean
+}
+
+export interface IUserClass {
+    data: IUser
+    login: (username: string, password: string) => Promise<boolean>
+    getUserInfo: () => Promise<boolean>
+}

@@ -4,7 +4,7 @@ import {dateNow} from "../helpers/helpers"
 import { IChartData } from "../interfaces/interface"
 import { resultToPercentage } from "../helpers/helpers"
 
-const initialhabits: IHabit[] = [
+const initialHabits: IHabit[] = [
     { id: 0, 
       title: "Встать до 6 утра", 
       category: "meditation", 
@@ -85,7 +85,7 @@ interface IEditHabit {
     category: string
 }
 
-class habits {
+class Habits {
     data: IHabit[] = []
 
     constructor() {
@@ -94,7 +94,7 @@ class habits {
             this.data = JSON.parse(localStorage.getItem('habits-tracker-habits') || "") as IHabit[]
         }
         catch {
-            this.data = initialhabits
+            this.data = initialHabits
         }
         
     }
@@ -201,4 +201,4 @@ class habits {
 
 }
 
-export default new habits()
+export default new Habits()

@@ -5,7 +5,7 @@ import UserPrefs from '../components/user-prefs';
 function ProfilePage() {
   return (<>
     <AppHeader AppHeaderComponents={[AddHabit]}/>
-    <UserPrefs/>
+    <UserPrefs />
   </>    
   );
 }

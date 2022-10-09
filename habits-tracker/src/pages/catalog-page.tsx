@@ -5,7 +5,7 @@ import HabitsCatalog from '../habits-catalog';
 function HabitsCatalogPage() {
   return (
     <>
-        <AppHeader AppHeaderComponents={[AddHabbit]}/>
+        <AppHeader AppHeaderComponents={[AddHabbit]} />
         <HabitsCatalog />        
     </>    
   );

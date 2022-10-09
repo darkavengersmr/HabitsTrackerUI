@@ -1,9 +1,9 @@
 import { useColorMode } from "@chakra-ui/react";
 import { Box, Container, Flex, Text, Switch } from "@chakra-ui/react";
+import user from '../../store/user';
 
 function UserPrefs() {
   const { colorMode, toggleColorMode } = useColorMode()
-
   return (<>
     <Box>
         <Container maxW='600px' mt={12}>                
