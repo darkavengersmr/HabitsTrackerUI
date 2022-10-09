@@ -22,7 +22,7 @@ class User implements IUserClass {
         }
     }
 
-    async login (username: string, password: string): Promise<boolean> {        
+    async login (username: string, password: string): Promise<boolean> {    
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: {
@@ -41,6 +41,11 @@ class User implements IUserClass {
             this.data.isLogIn = false
             return false
           }                    
+    }
+
+    logout() {
+        this.data.isLogIn = false
+        localStorage.removeItem('habits-tracker-user')
     }
 
     async getUserInfo(): Promise<boolean> {

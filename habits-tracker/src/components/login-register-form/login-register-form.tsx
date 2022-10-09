@@ -1,7 +1,9 @@
-import { Button, Container, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Button, Container, FormControl, FormLabel, Heading, Input } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInput } from "../../hooks";
+import user from "../../store/user";
 
 type LoginRegisterFormProps = {
     register: boolean
@@ -13,9 +15,18 @@ const LoginRegisterForm = observer(({register}: LoginRegisterFormProps) => {
     const email = useInput("", "notNullText")
     const password = useInput("", "notNullText")
 
+    const [error, setError] = useState("")
+
     const navigate = useNavigate()
 
-    const handleLogin = () => {}
+    const handleLogin = async () => {
+        if (await user.login(email.value, password.value)) {
+            navigate('/')
+        } else {            
+            setError("Некорректный e-mail или пароль")
+        }
+    }
+        
     const handleRegister = () => {}
 
     return (
@@ -70,7 +81,11 @@ const LoginRegisterForm = observer(({register}: LoginRegisterFormProps) => {
 
             {register && <Button colorScheme='blue' m={4} onClick={() => navigate('/login')}>
                     Есть учетная запись
-            </Button>}            
+            </Button>}
+
+            <Heading as='h6' size='sm' color="red">
+                     {error}
+            </Heading>
 
         </Container>
         </>    

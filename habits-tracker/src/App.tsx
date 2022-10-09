@@ -13,7 +13,7 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user.data.token && user.data.isLogIn) {
       if (!user.getUserInfo()) {
         navigate('/login')        
@@ -21,7 +21,7 @@ function App() {
     } else {
       navigate('/login')      
     }
-  }, [])
+  }, [navigate])
 
   return (<>
     <Routes>

@@ -44,5 +44,6 @@ export interface IUser {
 export interface IUserClass {
     data: IUser
     login: (username: string, password: string) => Promise<boolean>
+    logout: () => void
     getUserInfo: () => Promise<boolean>
 }
