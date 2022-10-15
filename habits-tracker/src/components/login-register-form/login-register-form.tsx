@@ -12,8 +12,8 @@ type LoginRegisterFormProps = {
 const LoginRegisterForm = observer(({register}: LoginRegisterFormProps) => {
 
     const username = useInput("", "notNullText")
-    const email = useInput("", "notNullText")
-    const password = useInput("", "notNullText")
+    const email = useInput("", "email")
+    const password = useInput("", "password")
 
     const [error, setError] = useState("")
 
@@ -27,7 +27,13 @@ const LoginRegisterForm = observer(({register}: LoginRegisterFormProps) => {
         }
     }
         
-    const handleRegister = () => {}
+    const handleRegister = async () => {
+        if (await user.register(username.value, email.value, password.value)) {
+            navigate('/')
+        } else {            
+            setError("Ошибка регистрации")
+        }
+    }
 
     return (
         <>    

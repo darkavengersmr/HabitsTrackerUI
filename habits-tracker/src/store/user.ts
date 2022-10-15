@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable, runInAction } from "mobx"
 import { IUser, IUserClass } from "../interfaces/interface"
 
 const initialUser: IUser = {
@@ -29,16 +29,18 @@ class User implements IUserClass {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({email: username, password: password})
+            body: JSON.stringify({email: username, password})
           });
-          if (response.ok) {
-            this.data.isLogIn = true
+          if (response.ok) {                      
             const data = await response.json()
-            this.data.token = data.token
-            this.getUserInfo()
+            runInAction(() => {
+              this.data.isLogIn = true  
+              this.data.token = data.token
+              this.getUserInfo()
+            })
             return true
           } else {
-            this.data.isLogIn = false
+            this.logout()
             return false
           }                    
     }
@@ -46,6 +48,30 @@ class User implements IUserClass {
     logout() {
         this.data.isLogIn = false
         localStorage.removeItem('habits-tracker-user')
+    }
+
+    async register (username: string, email: string, password: string): Promise<boolean> {
+      if (!username || !email || !password) return false
+      const response = await fetch('/api/registration', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({username, email, password})
+        });
+        if (response.ok) {          
+          const data = await response.json()
+          runInAction(() => {
+            this.data.isLogIn = true  
+            this.data.token = data.token
+            this.getUserInfo()            
+          })           
+          return true
+        } else {
+          this.logout()
+          return false
+        }                    
     }
 
     async getUserInfo(): Promise<boolean> {
@@ -58,12 +84,16 @@ class User implements IUserClass {
           });
           if (response.ok) {
             const data = await response.json();
-            this.data = {...this.data, ...data}
-            localStorage.setItem('habits-tracker-user', JSON.stringify(this.data));
+            runInAction(() => {
+              this.data = {...this.data, ...data}
+              localStorage.setItem('habits-tracker-user', JSON.stringify(this.data));
+            })
             return true            
           } else if (response.status === 401) {
-            this.data.isLogIn = false
-            localStorage.removeItem('habits-tracker-user')          
+            runInAction(() => {
+              this.data.isLogIn = false
+              localStorage.removeItem('habits-tracker-user')          
+            })
           }
           return false
     }

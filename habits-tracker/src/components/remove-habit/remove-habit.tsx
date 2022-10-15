@@ -22,8 +22,8 @@ const RemoveHabit: React.FC = () => {
     const { id = "-1"} = useParams()
     const navigate = useNavigate()
 
-    const handleRemoveHabit: React.MouseEventHandler<HTMLButtonElement> = () => {
-        if (id) habits.removeHabit(parseInt(id))
+    const handleRemoveHabit: React.MouseEventHandler<HTMLButtonElement> = async () => {
+        if (id) await habits.removeHabit(id)
         onClose()
         navigate('/')
     }
@@ -49,7 +49,7 @@ const RemoveHabit: React.FC = () => {
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     <Text>
-                        Вы действительно хотите удалить привычку "{habits.habitById(parseInt(id)).title}" и все данные по ее отслеживанию?
+                        Вы действительно хотите удалить привычку "{habits.habitById(id).title}" и все данные по ее отслеживанию?
                     </Text>
                 </ModalBody>
 

@@ -14,13 +14,17 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.data.token && user.data.isLogIn) {
-      if (!user.getUserInfo()) {
-        navigate('/login')        
+    const route = window.location.href.split('/').pop()
+    if (route !== 'login' && route !== 'register') {
+      if (user.data.token && user.data.isLogIn) {
+        if (!user.getUserInfo()) {
+          navigate('/login')        
+        }
+      } else {
+        navigate('/login')      
       }
-    } else {
-      navigate('/login')      
     }
+    
   }, [navigate])
 
   return (<>

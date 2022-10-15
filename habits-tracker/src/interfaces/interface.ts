@@ -3,7 +3,7 @@ export interface ITracker {
 }
 
 export interface IHabit {
-    id: number
+    _id: string
     title: string
     category: string
     tracker: {
@@ -12,13 +12,13 @@ export interface IHabit {
 }
 
 export interface ICategory {
-    id: number
+    _id: string
     title: string
     file: string    
 }
 
 export interface ICatalog {
-    id: number
+    _id: string
     title: string
     category: string 
     detail: string       
@@ -46,4 +46,12 @@ export interface IUserClass {
     login: (username: string, password: string) => Promise<boolean>
     logout: () => void
     getUserInfo: () => Promise<boolean>
+}
+
+export interface IEditHabit {
+    title?: string,
+    category?: string
+    tracker?: {
+        [key: string]: number
+    }
 }

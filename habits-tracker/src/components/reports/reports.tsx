@@ -6,7 +6,7 @@ import { useState } from "react"
 
 const Reports = observer(() => {
     
-    const [habitChartTitle, setHabitChartTitle] = useState(0)
+    const [habitChartTitle, setHabitChartTitle] = useState("0")
 
     return (
         <Container mt={5} mb={8}>            
@@ -14,11 +14,11 @@ const Reports = observer(() => {
                                      
                     <Select 
                             value={habitChartTitle}                                                        
-                            onChange={(e) => setHabitChartTitle(parseInt(e.target.value))}
+                            onChange={(e) => setHabitChartTitle(e.target.value)}
                     >
                         {habits.data.map((habit) => {
-                            return <option key={habit.id} 
-                                           value={habit.id}
+                            return <option key={habit._id} 
+                                           value={habit._id}
                                     >
                                         {habit.title}
                                     </option>
@@ -46,9 +46,9 @@ const Reports = observer(() => {
                             </Thead>
                             <Tbody>
                                 {habits.data.map(habit =>                     
-                                    <Tr key={habit.id}>
+                                    <Tr key={habit._id}>
                                         <Td>{habit.title}</Td>
-                                        <Td isNumeric>{habits.lastDaysWithoutPass(habit.id)}</Td>                
+                                        <Td isNumeric>{habits.lastDaysWithoutPass(habit._id)}</Td>                
                                     </Tr>
                                 )}            
                             </Tbody>
@@ -74,9 +74,9 @@ const Reports = observer(() => {
                             </Thead>
                             <Tbody>
                                 {habits.data.map(habit =>                     
-                                    <Tr key={habit.id}>
+                                    <Tr key={habit._id}>
                                         <Td>{habit.title}</Td>
-                                        <Td isNumeric>{habits.maxDaysWithoutPass(habit.id)}</Td>                
+                                        <Td isNumeric>{habits.maxDaysWithoutPass(habit._id)}</Td>                
                                     </Tr>
                                 )}            
                             </Tbody>

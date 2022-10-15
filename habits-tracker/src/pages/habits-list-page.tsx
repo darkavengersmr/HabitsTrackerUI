@@ -6,7 +6,7 @@ function habitsPage() {
   return (
     <>
         <AppHeader AppHeaderComponents={[AddHabbit]}/>
-        <HabitsList/>        
+        <HabitsList />        
     </>    
   );
 }

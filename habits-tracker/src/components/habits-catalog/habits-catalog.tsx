@@ -1,11 +1,11 @@
 import { Container, Grid, GridItem, Select, Text, useColorMode } from "@chakra-ui/react"
 import { observer } from "mobx-react-lite"
-import React from "react"
-import catalog from "../store/catalog"
-import AddHabit from "../components/add-habit"
-import { ICatalog } from "../interfaces/interface"
-import categories from "../store/categories"
-import { useInput } from "../hooks"
+import React, {useState, useEffect} from "react"
+import catalog from "../../store/catalog"
+import AddHabit from "../add-habit"
+import { ICatalog } from "../../interfaces/interface"
+import categories from "../../store/categories"
+import { useInput } from "../../hooks"
 
 function bgImage(category: string, theme: string): string {
     const color = theme === "dark" ? 0 : 255
@@ -13,12 +13,12 @@ function bgImage(category: string, theme: string): string {
            rgba(2${color}, ${color}, ${color}, 0.4)), url('../../images/${category}.png')`
 }
 
-const catalogItem = (habit: ICatalog, colorMode: string): React.ReactNode => {
+const catalogItem = (habit: ICatalog, colorMode: string) => {
     return (
     <GridItem w='320px' 
               h='160px'
               borderWidth={2}                          
-              key={habit.id} 
+              key={habit._id} 
               borderRadius="16px"
               bgImage={bgImage(habit.category, colorMode)}
               _before={{                            
@@ -47,6 +47,17 @@ const HabitsCatalog: React.FC = observer(() => {
     const categoriesCount = catalog.getFilteredByCategory(categoryFilter.value).length
     const { colorMode } = useColorMode()        
 
+    const initialCategories = {} as {[key: string]: string}
+
+    const [myCategories, setCategories] = useState(initialCategories);
+
+    useEffect(()=>{
+        catalog.updateCatalog();        
+        categories.getCategories().then((res) => {
+            setCategories(res)
+        })
+    },[])
+
     return (
         <>
         <Container mt={4} mb={0}
@@ -60,11 +71,11 @@ const HabitsCatalog: React.FC = observer(() => {
                     onChange={(e) => categoryFilter.onChange(e)}
             >
                 {
-                    Object.keys(categories.getCategories()).map((c) => (
+                    Object.keys(myCategories).map((c) => (
                         <option value={c} 
                                 key={c}
                         >
-                            {categories.getCategories()[c]}
+                            {myCategories[c]}
                         </option>
                     ))
                 }
@@ -81,7 +92,7 @@ const HabitsCatalog: React.FC = observer(() => {
                                     }}
                   gap={2}                  
             >
-                {catalog.getFilteredByCategory(categoryFilter.value).map((habit) => <AddHabit key={habit.id} 
+                {catalog.getFilteredByCategory(categoryFilter.value).map((habit) => <AddHabit key={habit._id} 
                                                        title={habit.title}
                                                        category={habit.category}
                                              >

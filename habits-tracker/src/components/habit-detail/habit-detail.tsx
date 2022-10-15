@@ -4,6 +4,7 @@ import { resultToPercentage } from "../../helpers/helpers"
 import { observer } from "mobx-react-lite"
 import HabitChart from "../chart"
 import habits from "../../store/habits"
+import catalog from "../../store/catalog"
 
 interface HabitDetailProps {
     habit: IHabit
@@ -12,11 +13,19 @@ interface HabitDetailProps {
 
 const HabitDetail = observer(({habit, data}: HabitDetailProps ) => {
     
+    const title = catalog.getDescriptionByTitle(habit.title)
+
     return (
         <Container mt={5} mb={8}>            
             <Text fontSize={24} mt={8} align="center">
             {habit.title}            
             </Text>
+
+            {title &&
+            <Text fontSize={16} mt={4} mx={4} align="center">
+            {title}            
+            </Text>
+            }
 
             <TableContainer mt={4}>        
                     <Table variant='simple'>            
@@ -29,11 +38,11 @@ const HabitDetail = observer(({habit, data}: HabitDetailProps ) => {
                         <Tbody>                            
                             <Tr>
                                 <Td>Без пропусков</Td>
-                                <Td isNumeric>{habits.lastDaysWithoutPass(habit.id)} </Td>                
+                                <Td isNumeric>{habits.lastDaysWithoutPass(habit._id)} </Td>                
                             </Tr>
                             <Tr>
                                 <Td>Всего без пропусков</Td>
-                                <Td isNumeric>{habits.maxDaysWithoutPass(habit.id)} </Td>                
+                                <Td isNumeric>{habits.maxDaysWithoutPass(habit._id)} </Td>                
                             </Tr>                            
                         </Tbody>
                     </Table>

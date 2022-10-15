@@ -12,9 +12,9 @@ const HabitDetailPage = observer(() => {
 
   const { id = "-1" } = useParams()
 
-  const habit = habits.habitById(parseInt(id))
+  const habit = habits.habitById(id)
 
-  const chartData = habits.chartData(parseInt(id))
+  const chartData = habits.chartData(id)
 
   if (!habit.title) {
     return (

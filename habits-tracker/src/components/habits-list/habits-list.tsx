@@ -1,10 +1,12 @@
 import { Container, Grid, GridItem, Text, useColorMode } from "@chakra-ui/react"
+import {useState, useEffect} from "react"
 import { observer } from "mobx-react-lite"
-import React from "react"
-import habits from "../../store/habits"
 import HabitsRating from "../habbit-rating"
 import {dateNow} from "../../helpers/helpers"
 import { useNavigate } from "react-router-dom"
+import habits from "../../store/habits"
+import { IHabit } from "../../interfaces/interface"
+import categories from "../../store/categories"
 
 function bgImage(category: string, theme: string): string {
     const color = theme === "dark" ? 0 : 255
@@ -12,7 +14,18 @@ function bgImage(category: string, theme: string): string {
            rgba(2${color}, ${color}, ${color}, 0.4)), url('../../images/${category}.png')`
 }
 
-const habitsList: React.FC = observer(() => {
+const habitsList = observer(() => {
+
+    const initialHabits = [] as IHabit[]
+
+    const [myHabits, setMyHabits] = useState(initialHabits);
+
+    useEffect(()=>{
+        categories.updateCategories();
+        habits.getHabits().then((res) => {            
+            setMyHabits(res)
+        })
+    },[])
 
     const navigate = useNavigate()
     const { colorMode } = useColorMode()    
@@ -28,7 +41,7 @@ const habitsList: React.FC = observer(() => {
                 Не самая простая задача, помочь в которой может трекер привычек. 
                 </Text>
                 <Text fontSize={24} mt={8}>
-                Чтобы начать, добавьте первую привычку, нажав на +
+                Чтобы начать, добавьте первую привычку, выбрав ее из каталога или введите свою, нажав на +
                 </Text>        
             </Container>
         )
@@ -47,12 +60,12 @@ const habitsList: React.FC = observer(() => {
                                      xl: "repeat(4, 1fr)"}}
                   gap={2}                                    
             >
-                {habits.data.map((habit) => {
+                {myHabits.map((habit) => {
                 return (
                 <GridItem w='320px' 
                           h='160px'
                           borderWidth={2}                          
-                          key={habit.id} 
+                          key={habit._id} 
                           borderRadius="16px"
                           bgImage={bgImage(habit.category, colorMode)}
                           _before={{                            
@@ -65,7 +78,7 @@ const habitsList: React.FC = observer(() => {
                         <GridItem w='320px'
                                   h='80px'
                                   gridColumn="span 4"
-                                  onClick={() => navigate(`habit/${habit.id}`)}
+                                  onClick={() => navigate(`habit/${habit._id}`)}
                         >
                             <Text fontSize={24} mt={4} ml={4} noOfLines={2}>
                                 {habit.title} 
@@ -77,7 +90,7 @@ const habitsList: React.FC = observer(() => {
                                   alignItems="end"
                         >
                             <Text fontSize={20} mb={3} ml={4} fontWeight="700"> 
-                                {habits.lastDaysWithoutPass(habit.id)}/30
+                                {habits.lastDaysWithoutPass(habit._id)}/30
                             </Text>
                         
                         </GridItem>
@@ -86,7 +99,7 @@ const habitsList: React.FC = observer(() => {
                                   gridColumn="span 3"
                         >
                             <HabitsRating rate={habit.tracker[dateYYYYMMDD]} 
-                                          onChangeRate={(rating) => {habits.setRating(habit.id, rating)}}/>        
+                                          onChangeRate={(rating) => {habits.setRating(habit._id, rating)}}/>        
                         </GridItem>
                     </Grid>
                     

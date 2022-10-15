@@ -1,11 +1,11 @@
-import { makeAutoObservable } from "mobx"
-import { IHabit } from "../interfaces/interface"
-import {dateNow} from "../helpers/helpers"
-import { IChartData } from "../interfaces/interface"
-import { resultToPercentage } from "../helpers/helpers"
+import { makeAutoObservable, runInAction } from "mobx"
+import { dateNow, resultToPercentage } from "../helpers/helpers"
+import { IChartData, IHabit, IEditHabit } from "../interfaces/interface"
+import user from "./user"
 
+/*
 const initialHabits: IHabit[] = [
-    { id: 0, 
+    { _id: "0", 
       title: "Встать до 6 утра", 
       category: "meditation", 
       tracker: 
@@ -28,7 +28,7 @@ const initialHabits: IHabit[] = [
                 "2022-09-30": 5,
                 } 
     },
-    { id: 1, 
+    { _id: "1", 
       title: "Пройти 10000 шагов", 
       category: "fitness", 
       tracker: 
@@ -48,7 +48,7 @@ const initialHabits: IHabit[] = [
                 "2022-09-30": 5,
                 } 
     },
-    { id: 2, 
+    { _id: "2", 
       title: "Читать 20 страниц", 
       category: "books", 
       tracker: 
@@ -60,7 +60,7 @@ const initialHabits: IHabit[] = [
                 "2022-09-30": 5,
                 } 
 },
-    { id: 3, 
+    { _id: "3", 
       title: "Гимнастика для глаз", 
       category: "health", 
       tracker: 
@@ -79,11 +79,7 @@ const initialHabits: IHabit[] = [
                 } 
     },
 ]
-
-interface IEditHabit {
-    title: string,
-    category: string
-}
+*/ 
 
 class Habits {
     data: IHabit[] = []
@@ -94,40 +90,114 @@ class Habits {
             this.data = JSON.parse(localStorage.getItem('habits-tracker-habits') || "") as IHabit[]
         }
         catch {
-            this.data = initialHabits
+            this.data = [] as IHabit[]
         }
         
     }
 
-    addHabit(habit: IHabit): void {
-        this.data.push(habit)
-        localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
-    }
-    
-    removeHabit(id: number): void {
-        this.data = this.data.filter((habit) => {return habit.id !== id})
-        localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
+    async getHabits(): Promise<IHabit[]> {
+        if (this.data.length === 0) {
+            const response = await fetch('/api/habits', {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json',
+                  'Authorization': `Bearer ${user.data.token}`
+                }            
+              });
+              if (response.ok) {
+                const data = await response.json();
+                runInAction(() => {
+                    this.data = data
+                })                
+                localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
+                           
+              } else if (response.status === 401) {
+                user.logout()         
+              }              
+        }
+        return this.data
     }
 
-    editHabit(id: number, newData: IEditHabit): void {
-        this.data.forEach((habit) => {
-            if (habit.id === id) {
-                habit.title = newData.title
-                habit.category = newData.category
-            }
-        })        
-        localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
+    async addHabit(title: string, category: string) {
+        const tracker = {}
+        Object.assign(tracker, {[dateNow(0)]: 0});        
+
+        const response = await fetch('/api/habit', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.data.token}`
+            },
+            body: JSON.stringify({title, category, tracker, user_id: user.data.id})
+          });
+          if (response.ok) {                
+            const {_id} = await response.json()            
+            runInAction(() => {                
+                
+                this.data.push({_id, title, category, tracker})
+                localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
+                
+            })                        
+          }         
     }
     
-    habitById(id: number): IHabit {
-        const habit = this.data.find((el) => el.id === id)        
+    async removeHabit(id: string) {        
+        const response = await fetch(`/api/habit/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',                
+                'Authorization': `Bearer ${user.data.token}`
+            },
+            
+          });
+          if (response.ok) {                                    
+            runInAction(() => {                
+                this.data = this.data.filter(habit => habit._id !== id)                
+                localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));                                    
+            })                        
+          }          
+    }
+
+    async editHabit(id: string, newData: IEditHabit) {
+        const habit = this.habitById(id)
+        const response = await fetch(`/api/habit/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.data.token}`
+            },
+            body: JSON.stringify({title: newData.title, 
+                                  category: newData.category, 
+                                  tracker: {...habit.tracker, ...newData.tracker},
+                                  user_id: user.data.id
+                                })
+          });
+          if (response.ok) {                
+                    
+            runInAction(() => {                
+                this.data.forEach((habit) => {
+                    if (habit._id === id) {
+                        if (newData.title) habit.title = newData.title
+                        if (newData.category) habit.category = newData.category
+                        if (newData.tracker) habit.tracker = {...habit.tracker, ...newData.tracker}
+                    }
+                })        
+                localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));                            
+            })                        
+          }
+    }
+    
+    habitById(id: string): IHabit {
+        const habit = this.data.find((el) => el._id === id)        
         if (habit) return habit
         else return {} as IHabit
     }
 
-    chartData(id: number): IChartData[] {
-        const habit = this.data.find((el) => el.id === id) || 
-                      {id: 0, title: "нет данных", category: "нет данных", tracker: { "нет данных": 0} }
+    chartData(id: string): IChartData[] {
+        const habit = this.data.find((el) => el._id === id) || 
+                      {_id: "0", title: "нет данных", category: "нет данных", tracker: { "нет данных": 0} }
         
         const arr = Object.keys(habit.tracker).map((el) => ({primary: el, 
                                                              secondary: resultToPercentage(habit.tracker[el])}))
@@ -141,8 +211,8 @@ class Habits {
     chartAllData(): IChartData[] {
         let chartData = []
         for (let i=0; i<this.data.length; i++) {
-            const habit = this.data.find((el) => el.id === i) || 
-                      {id: 0, title: "нет данных", category: "нет данных", tracker: { "нет данных": 0} }
+            const habit = this.data.find((el) => el._id === i.toString()) || 
+                      {_id: "0", title: "нет данных", category: "нет данных", tracker: { "нет данных": 0} }
                       const arr = Object.keys(habit.tracker).map((el) => ({primary: el, 
                         secondary: resultToPercentage(habit.tracker[el])}))
             chartData.push({            
@@ -153,17 +223,15 @@ class Habits {
         return chartData as IChartData[];
     }
 
-    setRating(id: number, rating: number): void {
-
-        this.data.forEach((habit) => {
-            if (habit.id === id) habit.tracker[dateNow(0)] = rating
-        })
-        localStorage.setItem('habits-tracker-habits', JSON.stringify(this.data));
+    async setRating(id: string, rating: number) {
+            const tracker = {}
+            Object.assign(tracker, {[dateNow(0)]: rating}); 
+            await this.editHabit(id, {tracker: tracker})                  
     }
 
-    lastDaysWithoutPass(id: number): number {
+    lastDaysWithoutPass(id: string): number {
         let bias = -1
-        const index = this.data.findIndex(el => el.id === id)
+        const index = this.data.findIndex(el => el._id === id)        
         let result = 0
 
         while(true) {
@@ -180,8 +248,8 @@ class Habits {
         return result;
     }
 
-    maxDaysWithoutPass(id: number): number {        
-        const index = this.data.findIndex(el => el.id === id)
+    maxDaysWithoutPass(id: string): number {        
+        const index = this.data.findIndex(el => el._id === id)
         let result = 0
         let record = 0
         

@@ -1,6 +1,6 @@
 import AddHabbit from '../components/add-habit'
 import AppHeader from '../components/app-header'
-import HabitsCatalog from '../habits-catalog';
+import HabitsCatalog from '../components/habits-catalog';
 
 function HabitsCatalogPage() {
   return (

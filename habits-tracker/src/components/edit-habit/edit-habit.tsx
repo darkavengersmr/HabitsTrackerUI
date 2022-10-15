@@ -19,15 +19,15 @@ const EditHabit: React.FC = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [overlay] = React.useState(<OverlayOne />)
-    const habitTitle = useInput(habits.habitById(parseInt(id)).title, "notNullText")
-    const categoryTitle = useInput(habits.habitById(parseInt(id)).category, "notNullText")
+    const habitTitle = useInput(habits.habitById(id).title, "notNullText")
+    const categoryTitle = useInput(habits.habitById(id).category, "notNullText")
 
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
 
     const editTitle = () => {
         if (!habitTitle.isInvalid) {
-            habits.editHabit(parseInt(id), {title: habitTitle.value, category: categoryTitle.value})
+            habits.editHabit(id, {title: habitTitle.value, category: categoryTitle.value})
             onClose()                      
         }
     }
@@ -84,7 +84,7 @@ const EditHabit: React.FC = () => {
                             onChange={(e) => categoryTitle.onChange(e)}
                     >
                         {categories.data.map((category) => {
-                            return <option key={category.id} 
+                            return <option key={category._id} 
                                            value={category.file}
                                     >
                                         {category.title}

@@ -41,10 +41,7 @@ const AddHabit: React.FC<Props> = ({children, title="", category=""}) => {
 
     const handleAddHabit: React.MouseEventHandler<HTMLButtonElement> = () => {
         if (!habitTitle.isInvalid && categoryTitle.value ) {
-            habits.addHabit({id: habits.data.length, 
-                title: habitTitle.value, 
-                category: categoryTitle.value, 
-                tracker: {}})
+            habits.addHabit(habitTitle.value, categoryTitle.value)
             onClose()
             habitTitle.clearValue()
             categoryTitle.clearValue()            
@@ -104,7 +101,7 @@ const AddHabit: React.FC<Props> = ({children, title="", category=""}) => {
                             onChange={(e) => categoryTitle.onChange(e)}
                     >
                         {categories.data.map((category) => {
-                            return <option key={category.id} 
+                            return <option key={category._id} 
                                            value={category.file}
                                     >
                                         {category.title}
